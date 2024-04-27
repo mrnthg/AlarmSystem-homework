@@ -12,7 +12,8 @@ public class AlarmSound : MonoBehaviour
     private float _recoveryRate = 0.2f;
 
     private float _finalVolume;
-    private IEnumerator Sounds;
+    private IEnumerator _sounds;
+    private bool _isStart = false;
 
     private void Start()
     {
@@ -33,14 +34,20 @@ public class AlarmSound : MonoBehaviour
     }
 
     private void AlarmSystem()
-    {
-        StopCoroutine(VolumeModification());
-        Sounds = VolumeModification();
-        StartCoroutine(Sounds);
+    {      
+        if (_isStart)
+        {
+            StopCoroutine(VolumeModification());
+        }
+        
+        _sounds = VolumeModification();
+        StartCoroutine(_sounds);
     }
 
     private IEnumerator VolumeModification()
     {
+        _isStart = true;
+
         _audioSource.Play();
 
         while (_audioSource.volume != _finalVolume)
