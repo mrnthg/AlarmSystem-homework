@@ -10,49 +10,45 @@ public class AlarmSound : MonoBehaviour
     private float _minCountVolume = 0; 
     private float _maxCountVolume = 1;
     private float _recoveryRate = 0.2f;
-    private bool _isDetected;
+
+    private float _finalVolume;
+    private IEnumerator Sounds;
 
     private void Start()
     {
         _audioSource.clip = _clip;      
-        _audioSource.volume = _minCountVolume;
+        _audioSource.volume = _minCountVolume;      
     }
 
     public void StartAlarm()
-    {
-        _isDetected = true;
-        StartCoroutine(PlaySound());       
+    {       
+        _finalVolume = _maxCountVolume;
+        AlarmSystem();
     }
 
     public void StopAlarm()
     {
-        _isDetected = false;
-        StartCoroutine(StopSound());      
+        _finalVolume = _minCountVolume;       
+        AlarmSystem();
     }
 
-    private IEnumerator PlaySound()
+    private void AlarmSystem()
+    {
+        StopCoroutine(VolumeModification());
+        Sounds = VolumeModification();
+        StartCoroutine(Sounds);
+    }
+
+    private IEnumerator VolumeModification()
     {
         _audioSource.Play();
 
-        while (_audioSource.volume != _maxCountVolume && _isDetected)
+        while (_audioSource.volume != _finalVolume)
         {
-            _currentVolume = Mathf.MoveTowards(_currentVolume, _maxCountVolume, _recoveryRate * Time.deltaTime);
-            _audioSource.volume = _currentVolume;
-            
-            yield return null;
-        }   
-    }
-
-    private IEnumerator StopSound()
-    {
-        while (_audioSource.volume != _minCountVolume && !_isDetected)
-        {
-            _currentVolume = Mathf.MoveTowards(_currentVolume, _maxCountVolume, -_recoveryRate * Time.deltaTime);
+            _currentVolume = Mathf.MoveTowards(_currentVolume, _finalVolume, _recoveryRate * Time.deltaTime);
             _audioSource.volume = _currentVolume;
 
             yield return null;
         }
-
-        _audioSource.Stop();
     }
 }

@@ -9,7 +9,7 @@ public class Looking : MonoBehaviour
     [SerializeField] private Transform _player;
     [SerializeField] private Transform _camera;
 
-    void Update()
+    private void Update()
     {
         _camera.Rotate(_speed * -Input.GetAxis(MouseY) * Time.deltaTime * Vector3.right);
         _player.Rotate(_speed * Input.GetAxis(MouseX) * Time.deltaTime * Vector3.up);

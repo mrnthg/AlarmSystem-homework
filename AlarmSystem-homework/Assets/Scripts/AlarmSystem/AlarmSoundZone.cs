@@ -6,7 +6,7 @@ public class AlarmSoundZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<AlarmListener>())
+        if (other.GetComponent<PlayerMovement>())
         {
             _ambientSound.StartAlarm();
         }                 
@@ -14,7 +14,7 @@ public class AlarmSoundZone : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<AlarmListener>()) 
+        if (other.GetComponent<PlayerMovement>()) 
         {
             _ambientSound.StopAlarm(); 
         }
